@@ -24,6 +24,9 @@ Vagrant.configure("2") do |config|
     vb.memory = 2048
   end
 
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/share"
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
