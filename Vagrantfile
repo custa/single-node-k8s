@@ -116,6 +116,10 @@ sed -ri 's|^KUBE_CONTROLLER_MANAGER_ARGS="([^"]*)"|KUBE_CONTROLLER_MANAGER_ARGS=
 # 注：配置 --service-account-private-key-file 后，kube-controller-manager 会向 etcd 的 /registry/serviceaccounts/default/default 和 /registry/serviceaccounts/kube-system/default 写入 "selfLink" 和 "secrets"，即使后续去掉 --service-account-private-key-file，etcd 的数据不会自动删除
 
 
+# 规避拉取 registry.access.redhat.com/rhel7/pod-infrastructure:latest 失败问题
+rm -f /etc/docker/certs.d/*/redhat-ca.crt
+
+
 systemctl enable etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 systemctl start etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 
