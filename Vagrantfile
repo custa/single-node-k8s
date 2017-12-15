@@ -81,6 +81,13 @@ set -xe
 export PS4='+[$LINENO]'
 
 
+# 解决 -bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
+cat >/etc/environment <<\EOF
+LANG=en_US.utf-8
+LC_ALL=en_US.utf-8
+EOF
+
+
 # no_proxy
 echo 'export no_proxy=$(echo 10.0.2.{1..255} | sed "s/ /,/g")' >/etc/profile.d/no_proxy.sh
 echo 'export no_proxy=${no_proxy},localhost,127.0.0.1' >>/etc/profile.d/no_proxy.sh
