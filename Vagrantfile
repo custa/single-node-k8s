@@ -104,6 +104,11 @@ usermod -aG root vagrant
 #echo "HTTP_PROXY='${http_proxy}'" >>/etc/sysconfig/docker
 
 
+# 规避 kubectl create 创建 pod 出错问题
+cp -an /etc/kubernetes/apiserver /etc/kubernetes/apiserver.cyp
+sed -i "/^KUBE_ADMISSION_CONTROL=/{ s|,ServiceAccount|| }" /etc/kubernetes/apiserver
+
+
 systemctl enable etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 systemctl start etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 
