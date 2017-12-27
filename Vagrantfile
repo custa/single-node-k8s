@@ -127,6 +127,11 @@ sed -ri 's|^KUBE_CONTROLLER_MANAGER_ARGS="([^"]*)"|KUBE_CONTROLLER_MANAGER_ARGS=
 rm -f /etc/docker/certs.d/*/redhat-ca.crt
 
 
+# 修改 API Server 非安全监听地址为 0.0.0.0，允许从容器中访问
+cp -an /etc/kubernetes/apiserver /etc/kubernetes/apiserver.cyp
+sed -i "s|--insecure-bind-address=127.0.0.1|--insecure-bind-address=0.0.0.0|" /etc/kubernetes/apiserver
+
+
 systemctl enable etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 systemctl start etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
 
