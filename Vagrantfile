@@ -104,9 +104,16 @@ usermod -aG root vagrant
 #echo "HTTP_PROXY='${http_proxy}'" >>/etc/sysconfig/docker
 
 
-# 规避 kubectl create 创建 pod 出错问题
+# 创建并配置 Service Account 相关密钥，解决 kubectl create 创建 pod 出错问题
+openssl genrsa -out /etc/kubernetes/serviceaccount.key 4096
+
 cp -an /etc/kubernetes/apiserver /etc/kubernetes/apiserver.cyp
-sed -i "/^KUBE_ADMISSION_CONTROL=/{ s|,ServiceAccount|| }" /etc/kubernetes/apiserver
+# --service-account-key-file 不配置不影响
+#sed -ri 's|^KUBE_API_ARGS="([^"]*)"|KUBE_API_ARGS="\\1 --service-account-key-file=/etc/kubernetes/serviceaccount.key"|' /etc/kubernetes/apiserver
+
+cp -an /etc/kubernetes/controller-manager /etc/kubernetes/controller-manager.cyp
+sed -ri 's|^KUBE_CONTROLLER_MANAGER_ARGS="([^"]*)"|KUBE_CONTROLLER_MANAGER_ARGS="\\1 --service-account-private-key-file=/etc/kubernetes/serviceaccount.key"|' /etc/kubernetes/controller-manager
+# 注：配置 --service-account-private-key-file 后，kube-controller-manager 会向 etcd 的 /registry/serviceaccounts/default/default 和 /registry/serviceaccounts/kube-system/default 写入 "selfLink" 和 "secrets"，即使后续去掉 --service-account-private-key-file，etcd 的数据不会自动删除
 
 
 systemctl enable etcd kube-apiserver kube-controller-manager kube-proxy kube-scheduler kubelet
