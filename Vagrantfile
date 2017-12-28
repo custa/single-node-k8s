@@ -81,6 +81,10 @@ set -xe
 export PS4='+[$LINENO]'
 
 
+#
+echo 'export HISTTIMEFORMAT="%F %T  "' >>/etc/profile
+
+
 # 解决 -bash: warning: setlocale: LC_CTYPE: cannot change locale (UTF-8): No such file or directory
 cat >/etc/environment <<\EOF
 LANG=en_US.utf-8
