@@ -104,6 +104,10 @@ cat >>/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem <<\EOF
 EOF
 
 
+# OS 工具
+yum -y install net-tools
+
+
 # 安装 etcd 和 Kubernetes
 yum -y install etcd kubernetes
 usermod -aG root vagrant
